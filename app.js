@@ -31,7 +31,7 @@ let tempYear = tempDate.getFullYear();
 let tempMonth = tempDate.getMonth();
 let tempDay = tempDate.getDate();
 
-const futureDate = new Date(tempYear, tempMonth, tempDay + 10, 11, 30, 0);
+const futureDate = new Date(tempYear, tempMonth, tempDay + 10, 11, 0, 0);
 
 const year = futureDate.getFullYear();
 const month = months[futureDate.getMonth()];
@@ -40,12 +40,9 @@ const hours = futureDate.getHours();
 let minutes = futureDate.getMinutes();
 const weekday = weekdays[futureDate.getDay()];
 
-let amPm = "am";
-
-if (hours >= 12 && minutes > 0) amPm = "pm";
-if (minutes < 10) minutes = "0" + minutes;
-
-giveway.textContent = `giveway ends on ${weekday}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}${amPm}`;
+giveway.textContent = `giveway ends on ${weekday}, ${dayOfMonth} ${month} ${year} ${hours}:${formatZero(
+  minutes
+)}${amPm(hours, minutes)}`;
 
 function getRemainingTime() {
   const rightNow = new Date().getTime();
@@ -65,11 +62,6 @@ function getRemainingTime() {
 
   const timeLeft = [days, hours, minutes, seconds];
 
-  function formatZero(item) {
-    if (item < 10) return (item = "0" + item);
-    return item;
-  }
-
   deadlineItems.forEach((item, index) => {
     item.innerHTML = formatZero(timeLeft[index]);
   });
@@ -81,3 +73,13 @@ function getRemainingTime() {
 
 let countdown = setInterval(getRemainingTime, 1000);
 getRemainingTime();
+
+function formatZero(item) {
+  if (item < 10) return (item = "0" + item);
+  return item;
+}
+
+function amPm(hour, minute) {
+  if (hour >= 12 && minute > 0) return "pm";
+  return "am";
+}
